@@ -1,112 +1,276 @@
-import Image from "next/image";
+"use client"; // Adicione esta linha no início do arquivo
 
-export default function Home() {
+import { useState } from 'react';
+import axios from 'axios';
+
+// Interface para o estado do formulário de cadastro
+interface SignUpFormState {
+  firstname: string;
+  lastname: string;
+  email: string;
+  password: string;
+}
+
+// Componente para o formulário de cadastro
+// Componente para o formulário de cadastro
+const SignUpForm = ({ onSignUpSuccess, toggleForm }: { onSignUpSuccess: () => void; toggleForm: () => void }) => {
+  const [formData, setFormData] = useState<SignUpFormState>({
+    firstname: '',
+    lastname: '',
+    email: '',
+    password: ''
+  });
+  const [error, setError] = useState<string | null>(null);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData(prevData => ({ ...prevData, [name]: value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    // Verificação da senha
+    if (formData.password.length < 8 || !/\d/.test(formData.password) || !/[!@#$%^&*(),.?":{}|<>]/.test(formData.password)) {
+      setError('Password must be at least 8 characters long and contain at least one number and one special character.');
+      return;
+    }
+    try {
+      const response = await axios.post('http://localhost:8080/apiv1/signup', formData);
+      console.log(response.data);
+      onSignUpSuccess();
+    } catch (error) {
+      setError('An error occurred while signing up. Please try again.');
+      console.error(error);
+    }
+  };
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">src/app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:size-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
-
-      <div className="relative z-[-1] flex place-items-center before:absolute before:h-[300px] before:w-full before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 sm:before:w-[480px] sm:after:w-[240px] before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
+    <form onSubmit={handleSubmit}>
+      <h2 className="text-2xl font-bold mb-6 text-center">Sign Up</h2>
+      {error && <div className="mb-4 text-red-500">{error}</div>}
+      <div className="mb-4">
+        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="firstname">First Name</label>
+        <input
+          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          id="firstname"
+          type="text"
+          name="firstname"
+          value={formData.firstname}
+          onChange={handleChange}
+          placeholder="First Name"
         />
       </div>
-
-      <div className="mb-32 grid text-center lg:mb-0 lg:w-full lg:max-w-5xl lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
+      <div className="mb-4">
+        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="lastname">Last Name</label>
+        <input
+          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          id="lastname"
+          type="text"
+          name="lastname"
+          value={formData.lastname}
+          onChange={handleChange}
+          placeholder="Last Name"
+        />
+      </div>
+      <div className="mb-4">
+        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">Email</label>
+        <input
+          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          id="email"
+          type="email"
+          name="email"
+          value={formData.email}
+          onChange={handleChange}
+          placeholder="Email"
+        />
+      </div>
+      <div className="mb-6">
+        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">Password</label>
+        <input
+          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+          id="password"
+          type="password"
+          name="password"
+          value={formData.password}
+          onChange={handleChange}
+          placeholder="******************"
+        />
+      </div>
+      <div className="flex items-center justify-between mb-4">
+        <button
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
+          type="submit"
         >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Docs{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
+          Sign Up
+        </button>
+      </div>
+      <div className="text-center my-4">
+        <span className="text-gray-500">or</span>
+      </div>
+      <div className="flex items-center justify-between mb-4">
+        <button
+          className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
+          type="button"
+          onClick={toggleForm}
         >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Learn{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
+          Back to Login
+        </button>
+      </div>
+    </form>
+  );
+};
 
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Templates{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Explore starter templates for Next.js.
-          </p>
-        </a>
 
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Deploy{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-balance text-sm opacity-50">
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
+// Componente para o formulário de redefinição de senha
+const ForgotPasswordForm = ({ toggleForm }: { toggleForm: () => void }) => {
+  const [email, setEmail] = useState('');
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post('http://localhost:8080/apiv1/forgot-password', { email });
+      console.log(response.data);
+      // Adicione feedback de sucesso para o usuário aqui, se necessário
+    } catch (error) {
+      console.error(error);
+      // Adicione tratamento de erro aqui, se necessário
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <h2 className="text-2xl font-bold mb-6 text-center">Reset Password</h2>
+      <div className="mb-4">
+        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">Email</label>
+        <input
+          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          id="email"
+          type="email"
+          name="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Email"
+        />
+      </div>
+      <div className="flex items-center justify-between mb-4">
+        <button
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
+          type="submit"
+        >Send Reset Link</button>
+      </div>
+      <div className="flex items-center justify-between mb-4">
+        <button
+          className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
+          type="button"
+          onClick={toggleForm}
+        >Back to Login</button>
+      </div>
+    </form>
+  );
+};
+
+// Componente para o formulário de login
+const LoginForm = ({ toggleForm, onForgotPassword }: { toggleForm: () => void; onForgotPassword: () => void }) => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState<string | null>(null);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    // Verificação básica do formato do e-mail
+    if (!email.includes('@')) {
+      setError('Invalid email format');
+      return;
+    }
+    try {
+      const response = await axios.post('http://localhost:8080/apiv1/signin', { email, password });
+      console.log(response.data);
+      // Adicione lógica de redirecionamento ou feedback de sucesso aqui
+    } catch (error) {
+      console.error(error);
+      // Adicione lógica de feedback de erro aqui, se necessário
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
+      {error && <div className="mb-4 text-red-500">{error}</div>}
+      <div className="mb-4">
+        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">Email</label>
+        <input
+          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          id="email"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Email"
+        />
+      </div>
+      <div className="mb-6">
+        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">Password</label>
+        <input
+          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+          id="password"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="******************"
+        />
+      </div>
+      <div className="flex items-center justify-between mb-4">
+        <label className="inline-flex items-center">
+          <input type="checkbox" className="form-checkbox text-blue-500" />
+          <span className="ml-2 text-gray-700 text-sm">Remember me</span>
+        </label>
+        <button
+          className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"
+          type="button"
+          onClick={onForgotPassword}
+        >Forgot Password?</button>
+      </div>
+      <div className="flex items-center justify-between mb-4">
+        <button
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
+          type="submit"
+        >Sign In</button>
+      </div>
+      <div className="text-center my-4">
+        <span className="text-gray-500">or</span>
+      </div>
+      <div className="flex items-center justify-between mb-4">
+        <button
+          className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
+          type="button"
+          onClick={toggleForm}
+        >Sign up free</button>
+      </div>
+      <div className="flex items-center justify-between mb-4">
+        <button
+          className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
+          type="button"
+        >Continue with Google</button>
+      </div>
+    </form>
+  );
+};
+
+
+// Função de componente padrão que representa a página inicial
+export default function Home() {
+  const [isSignUp, setIsSignUp] = useState(false); // Estado para alternar entre a tela de login e cadastro
+  const [isForgotPassword, setIsForgotPassword] = useState(false); // Estado para alternar entre a tela de login e redefinição de senha
+
+  return (
+    <main className="flex min-h-screen flex-col items-center justify-center p-6 bg-gray-100">
+      <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-md">
+        {isForgotPassword ? (
+          <ForgotPasswordForm toggleForm={() => setIsForgotPassword(false)} />
+        ) : isSignUp ? (
+          <SignUpForm onSignUpSuccess={() => setIsSignUp(false)} toggleForm={() => setIsSignUp(false)} />
+        ) : (
+          <LoginForm toggleForm={() => setIsSignUp(true)} onForgotPassword={() => setIsForgotPassword(true)} />
+        )}
       </div>
     </main>
   );
