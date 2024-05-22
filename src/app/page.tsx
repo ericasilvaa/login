@@ -11,7 +11,7 @@ interface SignUpFormState {
   password: string;
 }
 
-// Componente para o formulário de cadastro
+
 // Componente para o formulário de cadastro
 const SignUpForm = ({ onSignUpSuccess, toggleForm }: { onSignUpSuccess: () => void; toggleForm: () => void }) => {
   const [formData, setFormData] = useState<SignUpFormState>({
