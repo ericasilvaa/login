@@ -1,6 +1,6 @@
-# login
+# login/Register
 
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+Este projeto é uma aplicação Next.js criada com create-next-app, Tailwind CSS para estilização.
 
 ## Getting Started
 
@@ -10,7 +10,7 @@ First, run the development server:
 npm run dev
 # or
 yarn dev
-# or
+# ort
 pnpm dev
 # or
 bun dev
