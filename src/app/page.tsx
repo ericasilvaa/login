@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 import axios from 'axios';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons';
 
 // Interface para o estado do formulário de cadastro
 interface SignUpFormState {
@@ -10,7 +12,6 @@ interface SignUpFormState {
   email: string;
   password: string;
 }
-
 
 // Componente para o formulário de cadastro
 const SignUpForm = ({ onSignUpSuccess, toggleForm }: { onSignUpSuccess: () => void; toggleForm: () => void }) => {
@@ -45,13 +46,13 @@ const SignUpForm = ({ onSignUpSuccess, toggleForm }: { onSignUpSuccess: () => vo
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h2 className="text-2xl font-bold mb-6 text-center">Sign Up</h2>
+    <form onSubmit={handleSubmit} className="flex flex-wrap">
+      <h2 className="text-2xl font-bold mb-6 text-center w-full">Sign Up</h2>
       {error && <div className="mb-4 text-red-500">{error}</div>}
-      <div className="mb-4">
-        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="firstname">First Name</label>
+      <div className="mb-4 w-1/2 pr-2">
+        <label className="block text-white text-sm font-bold mb-2" htmlFor="firstname">First Name</label>
         <input
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          className="shadow appearance-none border rounded w-full py-2 px-3 text-black leading-tight focus:outline-none focus:shadow-outline"
           id="firstname"
           type="text"
           name="firstname"
@@ -60,10 +61,10 @@ const SignUpForm = ({ onSignUpSuccess, toggleForm }: { onSignUpSuccess: () => vo
           placeholder="First Name"
         />
       </div>
-      <div className="mb-4">
-        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="lastname">Last Name</label>
+      <div className="mb-4 w-1/2 pl-2">
+        <label className="block text-white text-sm font-bold mb-2" htmlFor="lastname">Last Name</label>
         <input
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          className="shadow appearance-none border rounded w-full py-2 px-3 text-black leading-tight focus:outline-none focus:shadow-outline"
           id="lastname"
           type="text"
           name="lastname"
@@ -72,42 +73,50 @@ const SignUpForm = ({ onSignUpSuccess, toggleForm }: { onSignUpSuccess: () => vo
           placeholder="Last Name"
         />
       </div>
-      <div className="mb-4">
-        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">Email</label>
-        <input
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          id="email"
-          type="email"
-          name="email"
-          value={formData.email}
-          onChange={handleChange}
-          placeholder="Email"
-        />
+      <div className="mb-4 w-full relative">
+        <label className="block text-white text-sm font-bold mb-2" htmlFor="email">Email</label>
+        <div className="flex items-center border rounded w-full py-2 px-3 text-black leading-tight focus:outline-none focus:shadow-outline bg-white">
+          <FontAwesomeIcon icon={faEnvelope} className="text-gray-500 mr-2" />
+          <input
+            className="appearance-none bg-transparent border-none w-full text-black leading-tight focus:outline-none"
+            id="email"
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            placeholder="Email"
+          />
+        </div>
       </div>
-      <div className="mb-6">
-        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">Password</label>
-        <input
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-          id="password"
-          type="password"
-          name="password"
-          value={formData.password}
-          onChange={handleChange}
-          placeholder="******************"
-        />
+
+      <div className="mb-6 w-full relative">
+        <label className="block text-white text-sm font-bold mb-2" htmlFor="password">Password</label>
+        <div className="flex items-center border rounded w-full py-2 px-3 text-black mb-3 leading-tight focus:outline-none focus:shadow-outline bg-white">
+          <FontAwesomeIcon icon={faLock} className="text-gray-500 mr-2" />
+          <input
+            className="appearance-none bg-transparent border-none w-full text-black leading-tight focus:outline-none"
+            id="password"
+            type="password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            placeholder="********"
+          />
+        </div>
       </div>
-      <div className="flex items-center justify-between mb-4">
+
+      <div className="flex items-center justify-between mb-4 w-full">
         <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
+          className="bg-blue-700 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
           type="submit"
         >
           Sign Up
         </button>
       </div>
-      <div className="text-center my-4">
-        <span className="text-gray-500">or</span>
+      <div className="text-center my-4 w-full">
+        <span className="text-white-500">or</span>
       </div>
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-4 w-full">
         <button
           className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
           type="button"
@@ -119,7 +128,6 @@ const SignUpForm = ({ onSignUpSuccess, toggleForm }: { onSignUpSuccess: () => vo
     </form>
   );
 };
-
 
 // Componente para o formulário de redefinição de senha
 const ForgotPasswordForm = ({ toggleForm }: { toggleForm: () => void }) => {
@@ -140,17 +148,25 @@ const ForgotPasswordForm = ({ toggleForm }: { toggleForm: () => void }) => {
   return (
     <form onSubmit={handleSubmit}>
       <h2 className="text-2xl font-bold mb-6 text-center">Reset Password</h2>
-      <div className="mb-4">
-        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">Email</label>
-        <input
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          id="email"
-          type="email"
-          name="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Email"
-        />
+
+
+
+      <div className="mb-4 relative">
+        <label className="block text-white-700 text-sm font-bold mb-2" htmlFor="email">Email</label>
+        <div className="flex items-center border rounded w-full py-2 px-3 text-black leading-tight focus:outline-none focus:shadow-outline bg-white">
+          <FontAwesomeIcon icon={faEnvelope} className="text-gray-500 mr-2" />
+          <input
+            className="appearance-none bg-transparent border-none w-full text-black leading-tight focus:outline-none"
+            id="email"
+            type="email"
+            name="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Email"
+          />
+        </div>
+
+
       </div>
       <div className="flex items-center justify-between mb-4">
         <button
@@ -178,6 +194,7 @@ const LoginForm = ({ toggleForm, onForgotPassword }: { toggleForm: () => void; o
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // Verificação básica do formato do e-mail
+    // Verificação básica do formato do e-mail
     if (!email.includes('@')) {
       setError('Invalid email format');
       return;
@@ -196,35 +213,45 @@ const LoginForm = ({ toggleForm, onForgotPassword }: { toggleForm: () => void; o
     <form onSubmit={handleSubmit}>
       <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
       {error && <div className="mb-4 text-red-500">{error}</div>}
-      <div className="mb-4">
-        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">Email</label>
-        <input
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          id="email"
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Email"
-        />
+      <div className="mb-4 relative">
+        <label className="block text-white text-sm font-bold mb-2" htmlFor="email">Email</label>
+        <div className="flex items-center border rounded w-full py-2 px-3 text-black leading-tight focus:outline-none focus:shadow-outline bg-white">
+          <FontAwesomeIcon icon={faEnvelope} className="text-gray-500 mr-2" />
+          <input
+            className="appearance-none bg-transparent border-none w-full text-black leading-tight focus:outline-none"
+            id="email"
+            type="email"
+            name="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Email"
+          />
+        </div>
       </div>
-      <div className="mb-6">
-        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">Password</label>
-        <input
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-          id="password"
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="******************"
-        />
+
+
+
+      <div className="mb-4 relative">
+        <label className="block text-white text-sm font-bold mb-2" htmlFor="password">Password</label>
+        <div className="flex items-center border rounded w-full py-2 px-3 text-black leading-tight focus:outline-none focus:shadow-outline bg-white">
+          <FontAwesomeIcon icon={faLock} className="text-gray-500 mr-2" />
+          <input
+            className="appearance-none bg-transparent border-none w-full text-black leading-tight focus:outline-none"
+            id="password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="********"
+          />
+        </div>
       </div>
       <div className="flex items-center justify-between mb-4">
         <label className="inline-flex items-center">
           <input type="checkbox" className="form-checkbox text-blue-500" />
-          <span className="ml-2 text-gray-700 text-sm">Remember me</span>
+          <span className="ml-2 text-white-700 text-sm">Remember me</span>
         </label>
         <button
-          className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"
+          className="inline-block align-baseline font-bold text-sm text-white hover:text-white hover:underline"
           type="button"
           onClick={onForgotPassword}
         >Forgot Password?</button>
@@ -236,18 +263,18 @@ const LoginForm = ({ toggleForm, onForgotPassword }: { toggleForm: () => void; o
         >Sign In</button>
       </div>
       <div className="text-center my-4">
-        <span className="text-gray-500">or</span>
+        <span className="text-white-500">or</span>
       </div>
       <div className="flex items-center justify-between mb-4">
         <button
-          className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
+          className="bg-green-700 hover:bg-green-900 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
           type="button"
           onClick={toggleForm}
         >Sign up free</button>
       </div>
       <div className="flex items-center justify-between mb-4">
         <button
-          className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
+          className="bg-gray-700 hover:bg-gray-900 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
           type="button"
         >Continue with Google</button>
       </div>
@@ -255,15 +282,14 @@ const LoginForm = ({ toggleForm, onForgotPassword }: { toggleForm: () => void; o
   );
 };
 
-
 // Função de componente padrão que representa a página inicial
 export default function Home() {
   const [isSignUp, setIsSignUp] = useState(false); // Estado para alternar entre a tela de login e cadastro
   const [isForgotPassword, setIsForgotPassword] = useState(false); // Estado para alternar entre a tela de login e redefinição de senha
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-6 bg-gray-100">
-      <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-md">
+    <main className="flex min-h-screen flex-col items-center justify-center p-6 bg-gray-90">
+      <div className="w-96 bg-black bg-opacity-50 p-8 rounded-lg shadow-md text-white">
         {isForgotPassword ? (
           <ForgotPasswordForm toggleForm={() => setIsForgotPassword(false)} />
         ) : isSignUp ? (
@@ -275,3 +301,5 @@ export default function Home() {
     </main>
   );
 }
+
+
